@@ -22,8 +22,6 @@ const forecastBaseUrl = process.env.FORECAST_BASE_URL ?? DEFAULT_FORECAST_URL;
 const temperatureUnit = process.env.TEMPERATURE_UNIT ?? 'celsius';
 const precipitationUnit = process.env.PRECIPITATION_UNIT ?? 'mm';
 
-const reportsDir = process.env.REPORTS_DIR ?? 'reports';
-
 export {
     port,
     nodeEnv,
@@ -32,5 +30,4 @@ export {
     forecastBaseUrl,
     temperatureUnit,
     precipitationUnit,
-    reportsDir,
 };
