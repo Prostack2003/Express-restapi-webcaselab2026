@@ -1,6 +1,5 @@
-# Dependencies and reports
+# Dependencies
 node_modules/
-reports
 
 # IDE
 .idea/
