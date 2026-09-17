@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import * as equipmentRepository from '../repositories/equipment.repository.js';
+import { NotFoundError } from '../errors/not-found.error.js';
+import { ConflictError } from '../errors/conflict.error.js';
 
 function createEquipment(data) {
     const existingEquipment = equipmentRepository.findBySerialNumber(
@@ -7,7 +9,7 @@ function createEquipment(data) {
     );
 
     if (existingEquipment !== null) {
-        throw new Error(
+        throw new ConflictError(
             `Оборудование с серийным номером "${data.serialNumber}" уже существует`
         );
     }
@@ -32,7 +34,7 @@ function listEquipment() {
 function getEquipmentById(equipmentId) {
     const equipment = equipmentRepository.findById(equipmentId);
     if (equipment === null) {
-        throw new Error(
+        throw new NotFoundError(
             `Оборудование с идентификатором "${equipmentId}" не найдено`
         );
     }
@@ -52,7 +54,7 @@ function updateEquipment(equipmentId, changes) {
             existingEquipment !== null &&
             existingEquipment.id !== equipmentId
         ) {
-            throw new Error(
+            throw new ConflictError(
                 `Оборудование с серийным номером "${changes.serialNumber}" уже существует`
             );
         }
