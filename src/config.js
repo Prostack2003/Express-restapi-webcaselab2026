@@ -3,6 +3,12 @@ import process from 'node:process';
 
 dotenv.config({ quiet: true });
 
+const DEFAULT_PORT = 3000;
+const DEFAULT_NODE_ENV = 'development';
+
+const port = Number(process.env.PORT ?? DEFAULT_PORT);
+const nodeEnv = process.env.NODE_ENV ?? DEFAULT_NODE_ENV;
+
 const DEFAULT_TIMEOUT_MS = 5000;
 const DEFAULT_GEOCODING_URL = 'https://geocoding-api.open-meteo.com';
 const DEFAULT_FORECAST_URL = 'https://api.open-meteo.com';
@@ -19,6 +25,8 @@ const precipitationUnit = process.env.PRECIPITATION_UNIT ?? 'mm';
 const reportsDir = process.env.REPORTS_DIR ?? 'reports';
 
 export {
+    port,
+    nodeEnv,
     requestTimeoutMs,
     geocodingBaseUrl,
     forecastBaseUrl,
