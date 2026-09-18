@@ -26,9 +26,13 @@ function deleteEquipment(request, response) {
 }
 
 function listEquipment(request, response) {
-    const equipment = equipmentService.listEquipment();
+    const { items, meta } = equipmentService.listEquipment(
+        request.validatedQuery
+    );
+
     return response.status(200).json({
-        data: equipment,
+        data: items,
+        meta,
     });
 }
 
