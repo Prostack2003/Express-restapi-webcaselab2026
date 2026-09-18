@@ -2,6 +2,7 @@ import {
     createEquipmentBodySchema,
     equipmentIdParamsSchema,
     updateEquipmentBodySchema,
+    equipmentQuerySchema,
 } from '../validators/equipment.schemas.js';
 import { ValidationError } from '../errors/validation.error.js';
 
@@ -18,6 +19,23 @@ function validateBody(schema, request, next) {
     }
 
     request.body = result.data;
+
+    return next();
+}
+
+function validateQuery(schema, request, next) {
+    const result = schema.safeParse(request.query);
+
+    if (result.success === false) {
+        return next(
+            new ValidationError(
+                'Переданы некорректные параметры запроса',
+                result.error.issues
+            )
+        );
+    }
+
+    request.validatedQuery = result.data;
 
     return next();
 }
@@ -51,8 +69,13 @@ function validateEquipmentIdParams(request, response, next) {
     return validateParams(equipmentIdParamsSchema, request, next);
 }
 
+function validateEquipmentQuery(request, response, next) {
+    return validateQuery(equipmentQuerySchema, request, next);
+}
+
 export {
     validateCreateEquipmentBody,
     validateUpdateEquipmentBody,
     validateEquipmentIdParams,
+    validateEquipmentQuery,
 };

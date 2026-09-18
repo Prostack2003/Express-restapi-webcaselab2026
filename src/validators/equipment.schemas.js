@@ -32,10 +32,24 @@ const createEquipmentBodySchema = z.object({
     installedAt: installedAtSchema,
 });
 
+const equipmentQuerySchema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
+    type: equipmentTypeSchema.optional(),
+    status: equipmentStatusSchema.optional(),
+    sortBy: z
+        .enum(['name', 'type', 'serialNumber', 'status', 'installedAt'])
+        .default('name'),
+    order: z.enum(['asc', 'desc']).default('asc'),
+    installedFrom: z.iso.date().optional(),
+    installedTo: z.iso.date().optional(),
+});
+
 const updateEquipmentBodySchema = createEquipmentBodySchema.partial();
 
 export {
     createEquipmentBodySchema,
     updateEquipmentBodySchema,
     equipmentIdParamsSchema,
+    equipmentQuerySchema,
 };

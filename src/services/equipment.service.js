@@ -29,8 +29,60 @@ function createEquipment(data) {
     return equipmentRepository.create(equipment);
 }
 
-function listEquipment() {
-    return equipmentRepository.findAll();
+function listEquipment(query = {}) {
+    let equipment = equipmentRepository.findAll();
+
+    if (query.type) {
+        equipment = equipment.filter((item) => {
+            return item.type === query.type;
+        });
+    }
+
+    if (query.status) {
+        equipment = equipment.filter((item) => {
+            return item.status === query.status;
+        });
+    }
+
+    if (query.installedFrom) {
+        equipment = equipment.filter((item) => {
+            return item.installedAt >= query.installedFrom;
+        });
+    }
+
+    if (query.installedTo) {
+        equipment = equipment.filter((item) => {
+            return item.installedAt <= query.installedTo;
+        });
+    }
+
+    const sortBy = query.sortBy ?? 'name';
+
+    equipment.sort((first, second) => {
+        const comparison = first[sortBy].localeCompare(second[sortBy], 'ru');
+
+        if (query.order === 'desc') {
+            return -comparison;
+        }
+
+        return comparison;
+    });
+
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const total = equipment.length;
+
+    const startIndex = (page - 1) * limit;
+    const items = equipment.slice(startIndex, startIndex + limit);
+
+    return {
+        items,
+        meta: {
+            total,
+            page,
+            limit,
+        },
+    };
 }
 
 function getEquipmentById(equipmentId) {
