@@ -4,6 +4,12 @@ import {
     updateEquipmentBodySchema,
     equipmentQuerySchema,
 } from '../validators/equipment.schemas.js';
+import {
+    requestIdParamsSchema,
+    createRequestBodySchema,
+    updateRequestBodySchema,
+    changeRequestStatusBodySchema,
+} from '../validators/request.schemas.js';
 import { ValidationError } from '../errors/validation.error.js';
 
 function validateBody(schema, request, next) {
@@ -73,9 +79,29 @@ function validateEquipmentQuery(request, response, next) {
     return validateQuery(equipmentQuerySchema, request, next);
 }
 
+function validateRequestIdParams(request, response, next) {
+    return validateParams(requestIdParamsSchema, request, next);
+}
+
+function validateCreateRequestBody(request, response, next) {
+    return validateBody(createRequestBodySchema, request, next);
+}
+
+function validateUpdateRequestBody(request, response, next) {
+    return validateBody(updateRequestBodySchema, request, next);
+}
+
+function validateChangeRequestStatusBody(request, response, next) {
+    return validateBody(changeRequestStatusBodySchema, request, next);
+}
+
 export {
     validateCreateEquipmentBody,
     validateUpdateEquipmentBody,
     validateEquipmentIdParams,
     validateEquipmentQuery,
+    validateRequestIdParams,
+    validateCreateRequestBody,
+    validateUpdateRequestBody,
+    validateChangeRequestStatusBody,
 };
