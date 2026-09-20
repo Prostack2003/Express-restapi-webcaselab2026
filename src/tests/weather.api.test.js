@@ -32,6 +32,7 @@ test('формируем URL для прогноза погоды', () => {
     );
     assert.equal(
         encodedForecastUrl.searchParams.get('daily'),
-        'temperature_2m_max,temperature_2m_min,precipitation_sum'
+        'temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max'
     );
+    assert.equal(encodedForecastUrl.searchParams.get('wind_speed_unit'), 'kmh');
 });
