@@ -16,6 +16,8 @@ function getErrorStatus(error) {
             return 409;
         case 'VALIDATION_ERROR':
             return 422;
+        case 'RATE_LIMIT_EXCEEDED':
+            return 429;
         case 'EXTERNAL_SERVICE_ERROR':
             return 502;
         default:
