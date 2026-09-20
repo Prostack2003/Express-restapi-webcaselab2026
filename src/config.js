@@ -41,6 +41,16 @@ const weatherForecastDays = Number(
 
 const logLevel = process.env.LOG_LEVEL ?? 'info';
 
+const jsonBodyLimit = process.env.JSON_BODY_LIMIT ?? '100kb';
+
+const corsOrigins = (process.env.CORS_ORIGINS ?? 'http://localhost:5173')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const rateLimitWindowMs = Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60000);
+const rateLimitMax = Number(process.env.RATE_LIMIT_MAX ?? 100);
+
 export {
     port,
     nodeEnv,
@@ -53,4 +63,8 @@ export {
     maxPrecipitationMm,
     weatherForecastDays,
     logLevel,
+    jsonBodyLimit,
+    corsOrigins,
+    rateLimitWindowMs,
+    rateLimitMax,
 };
