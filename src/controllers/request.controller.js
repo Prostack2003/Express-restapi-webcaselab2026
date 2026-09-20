@@ -29,10 +29,11 @@ function deleteRequest(request, response) {
 }
 
 function listRequests(request, response) {
-    const requests = requestService.listRequests();
+    const { items, meta } = requestService.listRequests(request.validatedQuery);
 
     return response.status(200).json({
-        data: requests,
+        data: items,
+        meta,
     });
 }
 
@@ -47,10 +48,14 @@ function getRequestById(request, response) {
 
 function listRequestsByEquipmentId(request, response) {
     const id = request.params.id;
-    const requests = requestService.listRequestsByEquipmentId(id);
+    const { items, meta } = requestService.listRequestsByEquipmentId(
+        id,
+        request.validatedQuery
+    );
 
     return response.status(200).json({
-        data: requests,
+        data: items,
+        meta,
     });
 }
 

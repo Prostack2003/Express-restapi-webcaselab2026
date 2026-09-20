@@ -12,6 +12,13 @@ const ALLOWED_STATUS_TRANSITIONS = {
     rejected: [],
 };
 
+const PRIORITY_ORDER = {
+    low: 1,
+    medium: 2,
+    high: 3,
+    critical: 4,
+};
+
 function createRequest(data) {
     const equipment = equipmentRepository.findById(data.equipmentId);
 
@@ -100,8 +107,84 @@ function getRequestById(requestId) {
     return request;
 }
 
-function listRequests() {
-    return requestRepository.findAll();
+function filterSortAndPaginateRequests(requests, query = {}) {
+    let filteredRequests = requests;
+
+    if (query.status) {
+        filteredRequests = filteredRequests.filter(
+            (item) => item.status === query.status
+        );
+    }
+
+    if (query.priority) {
+        filteredRequests = filteredRequests.filter(
+            (item) => item.priority === query.priority
+        );
+    }
+
+    if (query.equipmentId) {
+        filteredRequests = filteredRequests.filter(
+            (item) => item.equipmentId === query.equipmentId
+        );
+    }
+
+    if (query.createdFrom) {
+        const createdFromTimestamp = Date.parse(query.createdFrom);
+        filteredRequests = filteredRequests.filter(
+            (item) => Date.parse(item.createdAt) >= createdFromTimestamp
+        );
+    }
+
+    if (query.createdTo) {
+        const createdToTimestamp = Date.parse(query.createdTo);
+        filteredRequests = filteredRequests.filter(
+            (item) => Date.parse(item.createdAt) <= createdToTimestamp
+        );
+    }
+
+    const sortBy = query.sortBy ?? 'createdAt';
+
+    filteredRequests.sort((first, second) => {
+        let comparison;
+
+        if (sortBy === 'priority') {
+            comparison =
+                PRIORITY_ORDER[first.priority] -
+                PRIORITY_ORDER[second.priority];
+        } else {
+            comparison = String(first[sortBy] ?? '').localeCompare(
+                String(second[sortBy] ?? ''),
+                'ru'
+            );
+        }
+
+        if (query.order === 'desc') {
+            return -comparison;
+        }
+
+        return comparison;
+    });
+
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const total = filteredRequests.length;
+    const startIndex = (page - 1) * limit;
+    const items = filteredRequests.slice(startIndex, startIndex + limit);
+
+    return {
+        items,
+        meta: {
+            total,
+            page,
+            limit,
+        },
+    };
+}
+
+function listRequests(query = {}) {
+    let requests = requestRepository.findAll();
+
+    return filterSortAndPaginateRequests(requests, query);
 }
 
 function changeRequestStatus(requestId, newStatus) {
@@ -122,7 +205,7 @@ function changeRequestStatus(requestId, newStatus) {
     });
 }
 
-function listRequestsByEquipmentId(equipmentId) {
+function listRequestsByEquipmentId(equipmentId, query = {}) {
     const equipment = equipmentRepository.findById(equipmentId);
 
     if (!equipment) {
@@ -131,7 +214,9 @@ function listRequestsByEquipmentId(equipmentId) {
         );
     }
 
-    return requestRepository.findByEquipmentId(equipmentId);
+    const requests = requestRepository.findByEquipmentId(equipmentId);
+
+    return filterSortAndPaginateRequests(requests, query);
 }
 
 export {

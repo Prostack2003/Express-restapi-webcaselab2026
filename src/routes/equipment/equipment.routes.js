@@ -12,16 +12,20 @@ import {
     validateUpdateEquipmentBody,
     validateEquipmentIdParams,
     validateEquipmentQuery,
+    validateRequestQuery,
 } from '../../middlewares/validate.middleware.js';
 
 const equipmentRouter = Router();
 
 equipmentRouter.get('/equipment', validateEquipmentQuery, listEquipment);
+
 equipmentRouter.get(
     '/equipment/:id/requests',
     validateEquipmentIdParams,
+    validateRequestQuery,
     listRequestsByEquipmentId
 );
+
 equipmentRouter.post(
     '/equipment',
     validateCreateEquipmentBody,
