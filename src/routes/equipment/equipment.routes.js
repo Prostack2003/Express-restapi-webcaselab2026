@@ -6,6 +6,7 @@ import {
     listEquipment,
     getEquipmentById,
 } from '../../controllers/equipment.controller.js';
+import { getEquipmentWeather } from '../../controllers/weather.controller.js';
 import { listRequestsByEquipmentId } from '../../controllers/request.controller.js';
 import {
     validateCreateEquipmentBody,
@@ -24,6 +25,12 @@ equipmentRouter.get(
     validateEquipmentIdParams,
     validateRequestQuery,
     listRequestsByEquipmentId
+);
+
+equipmentRouter.get(
+    '/equipment/:id/weather',
+    validateEquipmentIdParams,
+    getEquipmentWeather
 );
 
 equipmentRouter.post(
