@@ -5,6 +5,10 @@ function getErrorStatus(error) {
         return 400;
     }
 
+    if (error.type === 'entity.too.large') {
+        return 413;
+    }
+
     switch (error.code) {
         case 'NOT_FOUND':
             return 404;
@@ -25,6 +29,17 @@ function errorHandler(error, request, response, _next) {
             error: {
                 code: 'BAD_REQUEST',
                 message: 'Некорректный JSON',
+                details: [],
+                requestId: request.id ?? null,
+            },
+        });
+    }
+
+    if (status === 413) {
+        return response.status(413).json({
+            error: {
+                code: 'PAYLOAD_TOO_LARGE',
+                message: 'Размер тела запроса превышает допустимый лимит',
                 details: [],
                 requestId: request.id ?? null,
             },

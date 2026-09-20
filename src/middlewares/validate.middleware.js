@@ -12,6 +12,13 @@ import {
 } from '../validators/request.schemas.js';
 import { ValidationError } from '../errors/validation.error.js';
 
+function formatZodIssues(issues, fallbackField) {
+    return issues.map((issue) => ({
+        field: issue.path.length > 0 ? issue.path.join('.') : fallbackField,
+        message: issue.message,
+    }));
+}
+
 function validateBody(schema, request, next) {
     const result = schema.safeParse(request.body);
 
@@ -19,7 +26,7 @@ function validateBody(schema, request, next) {
         return next(
             new ValidationError(
                 'Переданы некорректные данные',
-                result.error.issues
+                formatZodIssues(result.error.issues, 'body')
             )
         );
     }
@@ -36,7 +43,7 @@ function validateQuery(schema, request, next) {
         return next(
             new ValidationError(
                 'Переданы некорректные параметры запроса',
-                result.error.issues
+                formatZodIssues(result.error.issues, 'query')
             )
         );
     }
@@ -53,7 +60,7 @@ function validateParams(schema, request, next) {
         return next(
             new ValidationError(
                 'Переданы некорректные параметры',
-                result.error.issues
+                formatZodIssues(result.error.issues, 'params')
             )
         );
     }

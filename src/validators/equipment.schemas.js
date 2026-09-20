@@ -59,7 +59,12 @@ const equipmentQuerySchema = z
         }
     );
 
-const updateEquipmentBodySchema = createEquipmentBodySchema.partial();
+const updateEquipmentBodySchema = createEquipmentBodySchema
+    .partial()
+    .refine((value) => Object.keys(value).length > 0, {
+        message: 'Передайте хотя бы одно поле для обновления оборудования',
+        path: [],
+    });
 
 export {
     createEquipmentBodySchema,

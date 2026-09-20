@@ -17,10 +17,10 @@ const createRequestBodySchema = z.object({
 
 const updateRequestBodySchema = createRequestBodySchema
     .partial()
-    .refine(
-        (value) => Object.keys(value).length > 0,
-        'Передайте хотя бы одно поле для обновления заявки'
-    );
+    .refine((value) => Object.keys(value).length > 0, {
+        message: 'Передайте хотя бы одно поле для обновления заявки',
+        path: [],
+    });
 
 const changeRequestStatusBodySchema = z.object({
     status: requestStatusSchema,
