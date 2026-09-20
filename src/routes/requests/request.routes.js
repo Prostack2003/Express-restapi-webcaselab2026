@@ -5,11 +5,16 @@ import {
     validateCreateRequestBody,
     validateUpdateRequestBody,
     validateChangeRequestStatusBody,
+    validateRequestQuery,
 } from '../../middlewares/validate.middleware.js';
 
 const requestRouter = Router();
 
-requestRouter.get('/requests', requestController.listRequests);
+requestRouter.get(
+    '/requests',
+    validateRequestQuery,
+    requestController.listRequests
+);
 requestRouter.get(
     '/requests/:id',
     validateRequestIdParams,

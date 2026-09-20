@@ -9,6 +9,7 @@ import {
     createRequestBodySchema,
     updateRequestBodySchema,
     changeRequestStatusBodySchema,
+    requestQuerySchema,
 } from '../validators/request.schemas.js';
 import { ValidationError } from '../errors/validation.error.js';
 
@@ -86,6 +87,10 @@ function validateEquipmentQuery(request, response, next) {
     return validateQuery(equipmentQuerySchema, request, next);
 }
 
+function validateRequestQuery(request, response, next) {
+    return validateQuery(requestQuerySchema, request, next);
+}
+
 function validateRequestIdParams(request, response, next) {
     return validateParams(requestIdParamsSchema, request, next);
 }
@@ -108,6 +113,7 @@ export {
     validateEquipmentIdParams,
     validateEquipmentQuery,
     validateRequestIdParams,
+    validateRequestQuery,
     validateCreateRequestBody,
     validateUpdateRequestBody,
     validateChangeRequestStatusBody,
