@@ -39,6 +39,8 @@ const weatherForecastDays = Number(
     process.env.WEATHER_FORECAST_DAYS ?? DEFAULT_FORECAST_DAYS
 );
 
+const logLevel = process.env.LOG_LEVEL ?? 'info';
+
 export {
     port,
     nodeEnv,
@@ -50,4 +52,5 @@ export {
     maxWindSpeedKmh,
     maxPrecipitationMm,
     weatherForecastDays,
+    logLevel,
 };
