@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import * as equipmentRepository from '../repositories/equipment.repository.js';
+import * as requestRepository from '../repositories/request.repository.js';
 import { NotFoundError } from '../errors/not-found.error.js';
 import { ConflictError } from '../errors/conflict.error.js';
 import { ValidationError } from '../errors/validation.error.js';
@@ -132,6 +133,13 @@ function updateEquipment(equipmentId, changes) {
 
 function deleteEquipment(equipmentId) {
     getEquipmentById(equipmentId);
+
+    if (requestRepository.hasOpenRequestsByEquipmentId(equipmentId)) {
+        throw new ConflictError(
+            'Нельзя удалить оборудование, у которого есть открытые заявки'
+        );
+    }
+
     return equipmentRepository.remove(equipmentId);
 }
 

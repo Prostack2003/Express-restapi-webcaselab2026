@@ -58,4 +58,21 @@ function findByEquipmentId(equipmentId) {
     return structuredClone(foundEquipment);
 }
 
-export { create, findAll, findById, update, remove, findByEquipmentId };
+function hasOpenRequestsByEquipmentId(equipmentId) {
+    return requestItems.some((item) => {
+        return (
+            item.equipmentId === equipmentId &&
+            ['new', 'in_progress'].includes(item.status)
+        );
+    });
+}
+
+export {
+    create,
+    findAll,
+    findById,
+    update,
+    remove,
+    findByEquipmentId,
+    hasOpenRequestsByEquipmentId,
+};
